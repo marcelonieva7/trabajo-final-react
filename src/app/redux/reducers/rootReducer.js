@@ -1,11 +1,11 @@
-import { combineReducers } from 'redux';
-import { usersReducer } from './usersReducer';
+import { combineReducers } from 'redux'
+import centresReducer from './centresReducer'
+import authReducer from './authReducer'
 
-const root = (state = {}, action) => {
-    return state
-}
+const root = (state = {}) => state
 
 export default combineReducers({
-    root,
-    usersReducer
+  root,
+  centresReducer,
+  authReducer,
 })

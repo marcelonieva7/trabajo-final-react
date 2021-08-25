@@ -1,16 +1,21 @@
 {
   "name": "trabajo-final-react",
   "author": {
-    "name": "Emanuel Cortez"
+    "name": "Marcelo Nieva"
   },
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@chakra-ui/icons": "^1.0.15",
+    "@chakra-ui/react": "^1.6.6",
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.3.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "axios": "^0.21.1",
-    "bootstrap": "^5.0.2",
+    "framer-motion": "^4.1.17",
+    "js-cookie": "^3.0.0",
     "leaflet": "^1.7.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -27,7 +32,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint .  --ext .js,.jsx",
+    "lint-fix": "eslint . --ext .js,.jsx --fix"
   },
   "eslintConfig": {
     "extends": [
@@ -42,6 +49,12 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-plugin-import": "^2.24.0",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "redux-devtools-extension": "^2.13.9"
   }
 }
