@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { Link as RouterLink } from 'react-router-dom'
 import React from 'react'
+import Cookies from 'js-cookie'
 import {
   Box,
   Flex,
@@ -35,7 +36,7 @@ const mapStateToProps = state => ({
   userData: userDataSelector(state),
 })
 
-const NavBar = () => {
+const NavBar = ({ userData }) => {
   const { isOpen, onToggle } = useDisclosure()
   const { colorMode, toggleColorMode } = useColorMode()
 
@@ -78,7 +79,7 @@ const NavBar = () => {
           </Link>
 
           <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
-            <DesktopNav />
+            <DesktopNav userData={userData} />
           </Flex>
         </Flex>
 
@@ -100,6 +101,7 @@ const NavBar = () => {
         <Stack
           flex={{ base: 1, md: 0 }}
           justify="flex-end"
+          align="center"
           direction="row"
           spacing={6}
         >
@@ -111,46 +113,60 @@ const NavBar = () => {
             alignSelf="flex-end"
             onClick={toggleColorMode}
           />
-          {/* <Button
-            // as="a"
-            fontSize="sm"
-            fontWeight={400}
-            variant="link"
-          >
-            Sign In
-          </Button> */}
-          <Button
-            as={RouterLink}
-            display={{ base: 'none', md: 'inline-flex' }}
-            fontSize="sm"
-            fontWeight={600}
-            color="white"
-            bg="pink.400"
-            to="/login"
-            _hover={{
-              bg: 'pink.300',
-            }}
-          >
-            Iniciar Sesión
-          </Button>
+          {userData ? <Logout mobile={false} /> : <Login mobile={false} />}
         </Stack>
       </Flex>
 
       <Collapse in={isOpen} animateOpacity>
-        <MobileNav />
+        <MobileNav userData={userData} />
       </Collapse>
     </Box>
   )
 }
 
-const NAV_ITEMS = [
+const Login = ({ mobile }) => (
+  <Button
+    as={RouterLink}
+    display={{ base: mobile ? 'inline-flex' : 'none', md: !mobile ? 'inline-flex' : 'none' }}
+    fontSize="sm"
+    fontWeight={600}
+    color="white"
+    bg="pink.400"
+    to="/login"
+    _hover={{
+      bg: 'pink.300',
+    }}
+  >
+    Iniciar Sesión
+  </Button>
+)
+
+const Logout = ({ mobile }) => (
+  <Button
+    as={Link}
+    display={{ base: mobile ? 'inline-flex' : 'none', md: !mobile ? 'inline-flex' : 'none' }}
+    onClick={() => Cookies.remove('token')}
+    fontSize="sm"
+    fontWeight={600}
+    color="white"
+    bg="pink.400"
+    href="http://localhost:3000"
+    _hover={{
+      bg: 'red.300',
+    }}
+  >
+    Cerrar Sesión
+  </Button>
+)
+
+const NAV_ITEMS = userData => ([
   {
     label: 'Centros de vacunación',
     children: [
       {
         label: 'La Rioja',
-        subLabel: 'La Rioja Capital',
-        href: '/centres',
+        // subLabel: 'La Rioja Capital',
+        href: '/centers',
       },
       // {
       //   label: 'New & Noteworthy',
@@ -159,39 +175,41 @@ const NAV_ITEMS = [
       // },
     ],
   },
+  userData
+    ? {
+      label: 'Administrar',
+      children: [
+        {
+          label: 'Centros de vacunación',
+          // subLabel: 'Find your dream design job',
+          href: '/admin/centers',
+        },
+        // {
+        //   label: 'Freelance Projects',
+        //   subLabel: 'An exclusive list for contract work',
+        //   href: '#',
+        // },
+      ],
+    } : null,
   // {
-  //   label: 'Find Work',
-  //   children: [
-  //     {
-  //       label: 'Job Board',
-  //       subLabel: 'Find your dream design job',
-  //       href: '#',
-  //     },
-  //     {
-  //       label: 'Freelance Projects',
-  //       subLabel: 'An exclusive list for contract work',
-  //       href: '#',
-  //     },
-  //   ],
-  // },
-  // {
-  //   label: 'Centres',
-  //   href: '/centres',
+  //   label: 'Centers',
+  //   href: '/centers',
   // },
   // {
   //   label: 'Hire Designers',
   //   href: '#',
   // },
-]
+])
 
-const DesktopNav = () => {
+const DesktopNav = ({ userData }) => {
   const linkColor = useColorModeValue('gray.600', 'gray.200')
   const linkHoverColor = useColorModeValue('gray.800', 'white')
   const popoverContentBgColor = useColorModeValue('white', 'gray.800')
-
+  const navItems = NAV_ITEMS(userData)
   return (
     <Stack direction="row" spacing={4}>
-      {NAV_ITEMS.map(navItem => (
+      {navItems.map(navItem => (
+        navItem && (
         <Box key={navItem.label}>
           <Popover trigger="hover" placement="bottom-start">
             <PopoverTrigger>
@@ -229,12 +247,12 @@ const DesktopNav = () => {
             )}
           </Popover>
         </Box>
-      ))}
+        )))}
     </Stack>
   )
 }
 
-const DesktopSubNav = ({ label, href, subLabel }) => (
+const DesktopSubNav = ({ label, href }) => (
   <Link
     as={RouterLink}
     to={href}
@@ -253,7 +271,7 @@ const DesktopSubNav = ({ label, href, subLabel }) => (
         >
           {label}
         </Text>
-        <Text fontSize="sm">{subLabel}</Text>
+        {/* <Text fontSize="sm">{subLabel}</Text> */}
       </Box>
       <Flex
         transition="all .3s ease"
@@ -323,17 +341,21 @@ const MobileNavItem = ({ label, children, href }) => {
   )
 }
 
-const MobileNav = () => (
-  <Stack
-    bg={useColorModeValue('white', 'gray.800')}
-    p={4}
-    display={{ md: 'none' }}
-  >
-    {NAV_ITEMS.map(navItem => (
-      // @ts-ignore
-      <MobileNavItem key={navItem.label} {...navItem} />
-    ))}
-  </Stack>
-)
+const MobileNav = ({ userData }) => {
+  const navItems = NAV_ITEMS(userData)
+  return (
+    <Stack
+      bg={useColorModeValue('white', 'gray.800')}
+      p={4}
+      display={{ base: 'flex', md: 'none' }}
+    >
+      {navItems.map(navItem => (
+        // @ts-ignore
+        navItem && <MobileNavItem key={navItem.label} {...navItem} />
+      ))}
+      {userData ? <Logout mobile /> : <Login mobile />}
+    </Stack>
+  )
+}
 
 export default connect(mapStateToProps)(NavBar)
