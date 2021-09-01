@@ -57,7 +57,7 @@ const Center = ({ loading, center }) => (
         <Text align="center" color="gray.500" fontSize="sm" textTransform="uppercase">
           {center?.adress}
         </Text>
-        <Heading fontSize="2xl" fontFamily="body" fontWeight={500}>
+        <Heading align="center" fontSize="2xl" fontFamily="body" fontWeight={500}>
           {center?.name || 'Centro No encontrado'}
         </Heading>
       </Stack>

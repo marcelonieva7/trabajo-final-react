@@ -66,7 +66,7 @@ const CentersListView = ({ centers }) => {
               <Text align="center" color="gray.500" fontSize="sm" textTransform="uppercase">
                 {adress}
               </Text>
-              <Heading fontSize="2xl" fontFamily="body" fontWeight={500}>
+              <Heading align="center" fontSize="2xl" fontFamily="body" fontWeight={500}>
                 {name}
               </Heading>
             </Stack>

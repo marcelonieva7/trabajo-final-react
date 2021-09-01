@@ -150,7 +150,7 @@ const Logout = ({ mobile }) => (
     fontWeight={600}
     color="white"
     bg="pink.400"
-    href="http://localhost:3000"
+    href="https://covidcentre.herokuapp.com/"
     _hover={{
       bg: 'red.300',
     }}
@@ -175,7 +175,7 @@ const NAV_ITEMS = userData => ([
       // },
     ],
   },
-  userData
+  userData?.roles === 'Admin'
     ? {
       label: 'Administrar',
       children: [

@@ -8,8 +8,7 @@ const mapStateToProps = state => ({
 })
 
 const ProtectedComponent = ({ Component, userData }) => {
-  // eslint-disable-next-line no-constant-condition
-  if (userData?.roles === 'User' || 'Admin') {
+  if (userData?.roles === 'User' || userData?.roles === 'Admin') {
     return <Component />
   }
   return <LoginView />

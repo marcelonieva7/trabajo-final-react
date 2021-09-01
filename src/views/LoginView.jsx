@@ -8,6 +8,8 @@ import {
   Text,
   Link,
   Heading,
+  Code,
+  VStack,
 } from '@chakra-ui/react'
 
 const base = process.env.REACT_APP_API_BASE_URL
@@ -22,12 +24,15 @@ const LoginView = () => (
             <Text>Iniciar sesión con Github</Text>
           </Center>
         </Button>
-
         <Button as={Link} w="full" variant="outline" leftIcon={<FcGoogle />} href={`${base}/auth/google`}>
           <Center>
             <Text>Iniciar sesión con Google</Text>
           </Center>
         </Button>
+        <VStack>
+          <Code>Las cuentas de github se crean con acceso administrativo</Code>
+          <Code>Las cuentas de google se crean con acceso de usuario</Code>
+        </VStack>
       </Stack>
     </Center>
   </>
