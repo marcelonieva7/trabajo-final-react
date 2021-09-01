@@ -1,17 +1,16 @@
 import React from 'react'
-import { Skeleton } from '@chakra-ui/react'
 import { connect } from 'react-redux'
-import { loadingSelector, userDataSelector } from '../app/redux/selectors/authSelector'
+import { userDataSelector } from '../app/redux/selectors/authSelector'
 import LoginView from '../views/LoginView'
 
 const mapStateToProps = state => ({
-  loading: loadingSelector(state),
   userData: userDataSelector(state),
 })
 
-const ProtectedComponent = ({ Component, loading, userData }) => {
-  if (userData?.roles === 'Admin') {
-    return <Skeleton isLoaded={!loading}><Component /></Skeleton>
+const ProtectedComponent = ({ Component, userData }) => {
+  // eslint-disable-next-line no-constant-condition
+  if (userData?.roles === 'User' || 'Admin') {
+    return <Component />
   }
   return <LoginView />
 }

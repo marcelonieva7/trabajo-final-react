@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Box,
   Stack,
@@ -23,6 +23,7 @@ const AdminForm = ({ center, handleSubmit }) => {
     adress,
     coordenades,
   } = center || {}
+  const [newImg, setNewImg] = useState('')
   return (
     <Box>
       <Box mt={10}>
@@ -36,13 +37,24 @@ const AdminForm = ({ center, handleSubmit }) => {
               <Heading align="center" fontSize="lg" fontWeight="medium" lineHeight="6">
                 Administrar centro de vacunación
               </Heading>
-              <Image
-                rounded="lg"
-                height={230}
-                width={282}
-                objectFit="cover"
-                src={img}
-              />
+              {img ? (
+                <Image
+                  rounded="lg"
+                  height={230}
+                  width={282}
+                  objectFit="cover"
+                  src={img}
+                />
+              )
+                : (
+                  <Image
+                    rounded="lg"
+                    height={230}
+                    width={282}
+                    objectFit="cover"
+                    src={newImg}
+                  />
+                )}
             </Box>
           </GridItem>
           <GridItem mt={[5, null, 0]} colSpan={{ md: 2 }}>
@@ -74,6 +86,7 @@ const AdminForm = ({ center, handleSubmit }) => {
                         type="url"
                         placeholder="https://www.ejemplo.com"
                         defaultValue={img}
+                        onChange={e => setNewImg(e.target.value)}
                         focusBorderColor="brand.400"
                         shadow="sm"
                         size="sm"
