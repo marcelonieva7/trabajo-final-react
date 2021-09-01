@@ -26,28 +26,23 @@ const AdminModal = ({
   updateCenter,
 }) => {
   const { _id } = center || {}
-  const action = e => {
-    e.preventDefault()
-    const {
-      center_name, street_address, center_img, center_lat, center_lon,
-    } = e.target
+
+  const onSubmit = ({
+    name, img, adress, coordenades,
+  }) => {
     const data = {
-      name: center_name.value,
-      adress: street_address.value,
-      img: center_img.value,
-      coordenades: {
-        lat: Number(center_lat.value),
-        lon: Number(center_lon.value),
-      },
+      name,
+      adress,
+      img,
+      coordenades,
     }
-    // console.log(data)
     if (title === 'Editar centro') {
       updateCenter(_id, data)
-      onClose()
+      // onClose()
       return
     }
     createCenter(data)
-    onClose()
+    // onClose()
   }
   return (
     <>
@@ -57,7 +52,7 @@ const AdminModal = ({
           <ModalHeader>{title}</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
-            <AdminForm center={center} handleSubmit={action} />
+            <AdminForm center={center} onSubmit={onSubmit} />
           </ModalBody>
         </ModalContent>
       </Modal>

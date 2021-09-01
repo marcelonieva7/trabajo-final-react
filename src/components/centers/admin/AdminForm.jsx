@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 // @ts-nocheck
 import React, { useState } from 'react'
 import {
@@ -14,9 +15,13 @@ import {
   InputGroup,
   chakra,
   Image,
+  FormErrorMessage,
 } from '@chakra-ui/react'
+import { useForm } from 'react-hook-form'
+import { joiResolver } from '@hookform/resolvers/joi'
+import centerModel from '../../../app/models/center.model'
 
-const AdminForm = ({ center, handleSubmit }) => {
+const AdminForm = ({ center, onSubmit }) => {
   const {
     name,
     img,
@@ -24,6 +29,11 @@ const AdminForm = ({ center, handleSubmit }) => {
     coordenades,
   } = center || {}
   const [newImg, setNewImg] = useState('')
+  const {
+    handleSubmit,
+    register,
+    formState: { errors, isSubmitting },
+  } = useForm({ resolver: joiResolver(centerModel) })
   return (
     <Box>
       <Box mt={10}>
@@ -59,7 +69,7 @@ const AdminForm = ({ center, handleSubmit }) => {
           </GridItem>
           <GridItem mt={[5, null, 0]} colSpan={{ md: 2 }}>
             <chakra.form
-              onSubmit={handleSubmit}
+              onSubmit={handleSubmit(onSubmit)}
               shadow="base"
               rounded={[null, 'md']}
               overflow={{ sm: 'hidden' }}
@@ -72,9 +82,9 @@ const AdminForm = ({ center, handleSubmit }) => {
                 spacing={6}
               >
                 <SimpleGrid columns={6} spacing={6}>
-                  <FormControl as={GridItem} colSpan={6} isRequired>
+                  <FormControl as={GridItem} colSpan={6} isInvalid={errors.img}>
                     <FormLabel
-                      htmlFor="center_img"
+                      htmlFor="img"
                       fontSize="sm"
                       fontWeight="md"
                       color={useColorModeValue('gray.700', 'gray.50')}
@@ -90,17 +100,21 @@ const AdminForm = ({ center, handleSubmit }) => {
                         focusBorderColor="brand.400"
                         shadow="sm"
                         size="sm"
-                        name="center_img"
-                        id="center_img"
+                        name="img"
+                        id="img"
                         mt={1}
                         w="full"
                         rounded="md"
+                        {...register('img')}
                       />
                     </InputGroup>
+                    <FormErrorMessage>
+                      {errors.img && errors.img.message}
+                    </FormErrorMessage>
                   </FormControl>
-                  <FormControl as={GridItem} colSpan={6} isRequired>
+                  <FormControl as={GridItem} colSpan={6} isInvalid={errors.name}>
                     <FormLabel
-                      htmlFor="center_name"
+                      htmlFor="name"
                       fontSize="sm"
                       fontWeight="md"
                       color={useColorModeValue('gray.700', 'gray.50')}
@@ -111,21 +125,23 @@ const AdminForm = ({ center, handleSubmit }) => {
                       type="text"
                       placeholder="Nombre"
                       defaultValue={name}
-                      minLength="5"
-                      maxLength="30"
                       focusBorderColor="brand.400"
                       shadow="sm"
                       size="sm"
-                      name="center_name"
-                      id="center_name"
+                      name="name"
+                      id="name"
                       mt={1}
                       w="full"
                       rounded="md"
+                      {...register('name')}
                     />
+                    <FormErrorMessage>
+                      {errors.name && errors.name.message}
+                    </FormErrorMessage>
                   </FormControl>
-                  <FormControl as={GridItem} colSpan={6} isRequired>
+                  <FormControl as={GridItem} colSpan={6} isInvalid={errors.adress}>
                     <FormLabel
-                      htmlFor="street_address"
+                      htmlFor="adress"
                       fontSize="sm"
                       fontWeight="md"
                       color={useColorModeValue('gray.700', 'gray.50')}
@@ -134,23 +150,25 @@ const AdminForm = ({ center, handleSubmit }) => {
                     </FormLabel>
                     <Input
                       type="text"
-                      name="street_address"
-                      id="street_address"
+                      name="adress"
+                      id="adress"
                       placeholder="Ej. San Nicolas de Bari 255"
                       defaultValue={adress}
-                      minLength="5"
-                      maxLength="50"
                       mt={1}
                       focusBorderColor="brand.400"
                       shadow="sm"
                       size="sm"
                       w="full"
                       rounded="md"
+                      {...register('adress')}
                     />
+                    <FormErrorMessage>
+                      {errors.adress && errors.adress.message}
+                    </FormErrorMessage>
                   </FormControl>
-                  <FormControl as={GridItem} colSpan={[3, 4]} isRequired>
+                  <FormControl as={GridItem} colSpan={[3, 4]} isInvalid={errors.coordenades?.lat}>
                     <FormLabel
-                      htmlFor="center_lat"
+                      htmlFor="coordenades.lat"
                       fontSize="sm"
                       fontWeight="md"
                       color={useColorModeValue('gray.700', 'gray.50')}
@@ -160,8 +178,8 @@ const AdminForm = ({ center, handleSubmit }) => {
                     <Input
                       type="number"
                       step="0.000000000001"
-                      name="center_lat"
-                      id="center_lat"
+                      name="coordenades.lat"
+                      id="coordenades.lat"
                       placeholder="Ej. -66.8919548"
                       defaultValue={coordenades?.lat}
                       mt={1}
@@ -170,11 +188,15 @@ const AdminForm = ({ center, handleSubmit }) => {
                       size="sm"
                       w="full"
                       rounded="md"
+                      {...register('coordenades.lat', { valueasnumber: true })}
                     />
+                    <FormErrorMessage>
+                      {errors.coordenades?.lat && errors.coordenades?.lat.message}
+                    </FormErrorMessage>
                   </FormControl>
-                  <FormControl as={GridItem} colSpan={[3, 4]} isRequired>
+                  <FormControl as={GridItem} colSpan={[3, 4]} isInvalid={errors.coordenades?.lon}>
                     <FormLabel
-                      htmlFor="center_lon"
+                      htmlFor="coordenades.lon"
                       fontSize="sm"
                       fontWeight="md"
                       color={useColorModeValue('gray.700', 'gray.50')}
@@ -184,8 +206,8 @@ const AdminForm = ({ center, handleSubmit }) => {
                     <Input
                       type="number"
                       step="0.000000000001"
-                      name="center_lon"
-                      id="center_lon"
+                      name="coordenades.lon"
+                      id="coordenades.lon"
                       placeholder="Ej. -22.3454789"
                       defaultValue={coordenades?.lon}
                       mt={1}
@@ -194,7 +216,11 @@ const AdminForm = ({ center, handleSubmit }) => {
                       size="sm"
                       w="full"
                       rounded="md"
+                      {...register('coordenades.lon', { valueasnumber: true })}
                     />
+                    <FormErrorMessage>
+                      {errors.coordenades?.lon && errors.coordenades?.lon.message}
+                    </FormErrorMessage>
                   </FormControl>
                 </SimpleGrid>
               </Stack>
@@ -208,6 +234,7 @@ const AdminForm = ({ center, handleSubmit }) => {
                   type="submit"
                   _focus={{ shadow: '' }}
                   fontWeight="md"
+                  isLoading={isSubmitting}
                 >
                   Enviar
                 </Button>
